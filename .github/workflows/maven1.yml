@@ -1,33 +1,27 @@
-name: My First Workflow for Java
+name: Deployment Workflow
 
-on: 
+on:
   push:
-  workflow_dispatch:
+    branches:
+      - main
+      - develop
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v4.2.0
-      with:
-        always-auth: false # optional, default is false
-        node-version: '14' # specify the Node.js version you need
-        node-version-file: '' # optional, specify if you have a version file
-        architecture: 'x64' # optional, default is system architecture
-        check-latest: false # optional, default is false
-        registry-url: '' # optional, specify if you have a custom registry
-        scope: '' # optional, specify if you have a scoped registry
-        token: ${{ github.token }} # optional, default is ${{ github.token }}
-        cache: 'npm' # optional, specify package manager for caching
-        cache-dependency-path: 'package-lock.json' # optional, specify dependency file for caching
+    - name: Set DEPLOY_ENV variable
+      id: set-deploy-env
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "DEPLOY_ENV=production" >> $GITHUB_ENV
+        elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          echo "DEPLOY_ENV=staging" >> $GITHUB_ENV
+        fi
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm test
+    - name: Simulate deployment
+      run: echo "Deploying to ${{ env.DEPLOY_ENV }} environment"
