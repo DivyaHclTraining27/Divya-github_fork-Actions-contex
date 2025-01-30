@@ -11,8 +11,23 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.2.0
       with:
-        repository: ${{ github.repository }} # Default repository
-        ref: main # Branch to checkout, replace with your branch if different
-        token: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
-        fetch-depth: 1 # Fetch only the latest commit
+        always-auth: false # optional, default is false
+        node-version: '14' # specify the Node.js version you need
+        node-version-file: '' # optional, specify if you have a version file
+        architecture: 'x64' # optional, default is system architecture
+        check-latest: false # optional, default is false
+        registry-url: '' # optional, specify if you have a custom registry
+        scope: '' # optional, specify if you have a scoped registry
+        token: ${{ github.token }} # optional, default is ${{ github.token }}
+        cache: 'npm' # optional, specify package manager for caching
+        cache-dependency-path: 'package-lock.json' # optional, specify dependency file for caching
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
