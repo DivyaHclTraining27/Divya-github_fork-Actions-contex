@@ -1,0 +1,20 @@
+name: first workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags:
+      - v1.*
+      - v2.*
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Print message
+        run: echo "my first workflow"
