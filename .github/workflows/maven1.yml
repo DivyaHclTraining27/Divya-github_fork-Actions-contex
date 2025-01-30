@@ -1,27 +1,18 @@
-name: Setup Java and maven 
+name: My First Workflow for Java
 
-on:
- push:
- workflow_dispatch:
+on: 
+  push:
+  workflow_dispatch:
 
 jobs:
- echo-maven-setup:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4.2.2
-    - name: Setup Java JDK
-      uses: actions/setup-java@v4.7.0
-      with:
-       java-version: '17'
-       distribution: 'microsoft'
-    - run: mvn --batch-mode --update-snapshots verify
-    - run: mkdir staging &&  cp target/*.jar staging 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.6.0 
-      with:
-       name: Package_Java
-       path: staging
+  build:
+    runs-on: ubuntu-latest
 
-       
-    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.2
+      with:
+        repository: ${{ github.repository }} # Default repository
+        ref: main # Branch to checkout, replace with your branch if different
+        token: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
+        fetch-depth: 1 # Fetch only the latest commit
